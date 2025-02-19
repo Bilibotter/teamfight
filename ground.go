@@ -34,6 +34,7 @@ type ground struct {
 	castRecord []int // 记录每一次施法的伤害
 	handlers   []processI
 	endTime    int
+	walk       bool // 是否花时间在走路上，高频攻击战士才需要考虑走路的影响
 }
 
 const (
@@ -76,7 +77,7 @@ func newGround() *ground {
 			ap:       100,
 			as:       100,
 			amp:      100,
-			asAmp:    100,
+			strike:   0,
 			atkAmp:   100,
 			castAmp:  100,
 			critRate: 25,
@@ -92,6 +93,11 @@ func newGround() *ground {
 	return g
 }
 
+func (g *ground) End(endTime int) *ground {
+	g.endTime = endTime
+	return g
+}
+
 func (g *ground) Fight(name string) {
 	g.name = "[" + name + "]"
 	g.fight0()
@@ -101,6 +107,9 @@ func (g *ground) fight0() {
 	end := g.endTime * tick
 	atkSwing := 0  // 攻击前摇
 	castSwing := 0 // 施法前摇
+	step := 0
+	walking := 0
+	walkFreq := 4
 	for g.ticks <= end {
 		g.ticks++
 		g.now = g.ticks / tick
@@ -122,21 +131,32 @@ func (g *ground) fight0() {
 			continue
 		}
 
+		if g.walk && g.ticks >= walking+walkFreq*tick && step == 0 {
+			fmt.Printf("%4.1f秒:开始逛街\n", g.current())
+			step = tick
+			walking = g.ticks
+		}
+
+		if g.walk && step > 0 {
+			step--
+			if step == 1 {
+				fmt.Printf("%4.1f秒:结束逛街\n", g.current())
+			}
+			walking = g.ticks + 1
+			continue
+		}
+
 		atkSwing++
 		if g.speed()*float64(atkSwing)/float64(tick)-1 >= 0.0 {
-			dmg := g.attackFull()
-			g.recordDmg(dmg, fromAttack)
-			if !g.locking() {
-				g.mana += g.atkMana()
-			}
-			g.atkTimes += 1
-			g.process(newE(AttackA, g.atkTimes))
+			g.attack()
 			atkSwing = 0
-			if outputLevel >= 3 && !g.locking() {
-				fmt.Printf("%4.1f秒:第%d次攻击，伤害%.0f, 回复法力值%d\n", g.current(), g.atkTimes, dmg, g.atkMana())
-			}
-			if outputLevel >= 3 && g.locking() {
-				fmt.Printf("%4.1f秒:第%d次攻击，伤害%.0f, 法力锁定中\n", g.current(), g.atkTimes, dmg)
+			if g.double() {
+				if outputLevel >= 3 {
+					fmt.Printf("%4.1f秒:触发双重打击\n", g.current())
+				}
+				g.attack()
+				tmp := tick
+				g.ticks += int((1.0 / 7.0) * float64(tmp)) // 双重打击即以7.0攻速A一下
 			}
 		}
 
@@ -151,7 +171,7 @@ func (g *ground) fight0() {
 			// 懒得改测试用例
 			if !innerTesting {
 				// 很难打满20秒，选择在施法后结束
-				if g.now >= 15 {
+				if g.now >= 15 && g.skill.cost() > 100 {
 					end = (g.now + 1) * tick
 				}
 				if g.now >= 17 {
@@ -180,6 +200,23 @@ func (g *ground) fight0() {
 	g.summary()
 }
 
+func (g *ground) attack() float64 {
+	dmg := g.attackFull()
+	g.recordDmg(dmg, fromAttack)
+	g.atkTimes += 1
+	g.process(newE(AttackA, g.atkTimes))
+	if outputLevel >= 3 && !g.locking() {
+		fmt.Printf("%4.1f秒:第%d次攻击，伤害%.0f, 回复法力值%d\n", g.current(), g.atkTimes, dmg, g.atkMana())
+	}
+	if outputLevel >= 3 && g.locking() {
+		fmt.Printf("%4.1f秒:第%d次攻击，伤害%.0f, 法力锁定中\n", g.current(), g.atkTimes, dmg)
+	}
+	if !g.locking() {
+		g.mana += g.atkMana()
+	}
+	return dmg
+}
+
 func (g *ground) summary() {
 	name := g.name
 	if len(name) == 0 {
@@ -205,7 +242,7 @@ func (g *ground) summary() {
 		atkAvg = atkDmg / len(g.atkRecord)
 	}
 	percent := float64(castDmg) / float64(allDmg)
-	output := fmt.Sprintf("%-5s(%d秒) dsp=%d, castTime=%d, atkTime=%d, castAvg=%d, atkAvg=%d, skillPct=%.1f\n", name, g.now, dps, len(g.castRecord), len(g.atkRecord), castAvg, atkAvg, percent)
+	output := fmt.Sprintf("%-5s(%.0f秒) dsp=%d, castTime=%d, atkTime=%d, castAvg=%d, atkAvg=%d, skillPct=%.1f\n", name, g.current(), dps, len(g.castRecord), len(g.atkRecord), castAvg, atkAvg, percent)
 	if disableOutput {
 		results = append(results, result{output: output, dps: dps})
 	} else {

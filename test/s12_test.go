@@ -17,8 +17,11 @@ func TestMage(t *testing.T) {
 	kassadin := C.Mag(101, 30, 0.75).
 		Skill(70, 255).Fury(1, C.TimeGoA)
 	kassadin.StackPassive(C.AfterCastA, C.AE(80))
-	kassadin.Add(C.DoubleStrike(60 * 2))
-	kassadin.Guinsoo().Silver().Sword()
+	kassadin.Add(C.DoubleStrike(70))
+	kassadin.Guinsoo().Silver().Sword().Beaten()
+	kassadin.Walk()
+	kassadin.End(18)
+	kassadin.Fight("卡萨丁")
 
 	fiora := C.Phy(113, 70, 1).
 		Skill(130, 1.8*113*(3+3+2)/3+3.5*113, 60).

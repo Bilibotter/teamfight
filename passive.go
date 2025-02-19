@@ -126,7 +126,7 @@ func (p *passive) process(e event) {
 		p.left--
 		if p.left == 0 {
 			if p.tryCall() && outputLevel >= 3 {
-				fmt.Printf("%d秒:单次被动触发\n", p.g.now)
+				fmt.Printf("%4.1f秒:单次被动触发\n", p.g.current())
 			}
 			p.once++
 			p.left-- // 使p.left永远不为0
@@ -140,7 +140,7 @@ func (p *passive) process(e event) {
 
 	if p.freq == 0 {
 		if p.tryCall() && outputLevel >= 3 {
-			fmt.Printf("%d秒:常规被动触发\n", p.g.now)
+			fmt.Printf("%4.1f秒:常规被动触发\n", p.g.current())
 		}
 		return
 	}
@@ -169,12 +169,12 @@ func (p *passive) process(e event) {
 			p.attrs = attrs{}
 			p.attrs.Add(&p.overlay.attrs)
 			if outputLevel >= 3 {
-				fmt.Printf("%4d秒:第%d次叠加被动\n", p.g.now, p.overlay.count)
+				fmt.Printf("%4.1f秒:第%d次叠加被动\n", p.g.current(), p.overlay.count)
 			}
 		}
 		if p.overlay.reset && p.overlay.count == p.overlay.maxStack {
 			if outputLevel >= 3 {
-				fmt.Printf("%d秒:可叠加被动重置\n", p.g.now)
+				fmt.Printf("%4.1f秒:可叠加被动重置\n", p.g.current())
 			}
 			p.overlay.count = 0
 			p.attrs = attrs{}
@@ -185,7 +185,7 @@ func (p *passive) process(e event) {
 
 	if enough {
 		if p.tryCall() && outputLevel >= 3 {
-			fmt.Printf("%d秒:频率被动触发\n", p.g.now)
+			fmt.Printf("%4.1f秒:频率被动触发\n", p.g.current())
 		}
 	}
 }

@@ -57,8 +57,7 @@ func (g *ground) Shojin() *ground {
 func (g *ground) Guinsoo() *ground {
 	g.ap += 10
 	g.as += 10
-	as := int(5 * g.double())
-	p := stackPassive(AttackA, 1, AS(as))
+	p := stackPassive(AttackA, 1, AS(5))
 	g.passive(p)
 	return g
 }

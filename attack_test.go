@@ -198,14 +198,13 @@ func TestEffectCrit(t *testing.T) {
 	}
 }
 
-func TestEffectDoubleExplode(t *testing.T) {
+func TestEffectExplode(t *testing.T) {
 	reset()
 	Level(0)
 	g := newGround()
 	g.baseSpeed = 2
 	g.baseAtk = 100
 	g.ae = 110
-	g.asAmp = 200
 	g.atkAmp = 200
 	g.fight0()
 	if g.atkTimes != g.endTime*2 {
@@ -215,11 +214,11 @@ func TestEffectDoubleExplode(t *testing.T) {
 		t.Errorf("castTimes = %d, want 0", g.castTimes)
 	}
 	all, avg, record := g.getSecRecord()
-	if all != 4400*6 || avg != 220*6 || len(record) != 21 {
+	if all != 2200*6 || avg != 110*6 || len(record) != 21 {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 	all, avg, record = g.getAtkRecord()
-	if all != 4400*6 || avg != 110*6 || len(record) != 40 {
+	if all != 2200*6 || avg != 330 || len(record) != 40 {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 	all, avg, record = g.getCastRecord()

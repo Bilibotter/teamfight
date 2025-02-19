@@ -1,6 +1,9 @@
 package tft
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type champion struct {
 	attrs
@@ -140,14 +143,18 @@ func (g *champion) spellAmp() float64 {
 }
 
 // 双重打击
-func (g *champion) double() float64 {
-	amp := g.asAmp
+func (g *ground) double() bool {
+	amp := g.strike
 	for _, a := range g.attributes {
 		if a.valid() {
-			amp += a.body().asAmp
+			amp += a.body().strike
 		}
 	}
-	return float64(amp) / 100
+	if amp == 0 {
+		return false
+	}
+	rate := float64(amp) / 100
+	return rand.Float64() <= rate
 }
 
 // 普攻增强
@@ -162,11 +169,11 @@ func (g *champion) explode() float64 {
 }
 
 func (g *champion) attackDmg() float64 {
-	return g.crit() * g.baseAtk * g.physics() * g.explode() * g.double()
+	return g.crit() * g.baseAtk * g.physics() * g.explode()
 }
 
 func (g *champion) attackFull() float64 {
-	effect := g.effect() * g.double()
+	effect := g.effect()
 	if g.apAE() {
 		effect *= g.magic()
 	} else {

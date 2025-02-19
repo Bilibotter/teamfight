@@ -19,3 +19,8 @@ func (g *ground) template(actives ...int) *ground {
 	g.passive(p)
 	return g
 }
+
+func (g *ground) Walk() *ground {
+	g.walk = true
+	return g
+}

@@ -21,7 +21,7 @@ type attrs struct {
 	as        int  // 攻速
 	ae        int  // 附带特效伤害
 	aeType    int  // 附带特效类型,0为ap加成
-	asAmp     int  // 攻击次数增幅,影响羊刀叠加
+	strike    int  // 触发双重打击的概率
 	amp       int  // 伤害增幅
 	atkAmp    int  // 普攻增幅
 	castAmp   int  // 施法增幅
@@ -49,7 +49,7 @@ func (a *attrs) Add(src *attrs) *attrs {
 	a.ae += src.ae * src.factor / 100             // 附带特效伤害
 	a.amp += src.amp * src.factor / 100           // 伤害增幅
 	a.atkAmp += src.atkAmp * src.factor / 100     // 普攻增幅
-	a.asAmp += src.asAmp * src.factor / 100       // 攻击次数增幅
+	a.strike += src.strike * src.factor / 100     // 攻击次数增幅
 	a.castAmp += src.castAmp * src.factor / 100   // 施法增幅
 	a.critRate += src.critRate * src.factor / 100 // 暴击率
 	a.critAmp += src.critAmp * src.factor / 100   // 暴击伤害
@@ -77,7 +77,7 @@ func AE(i int) *attrs {
 }
 
 func DoubleStrike(i int) *attrs {
-	return &attrs{asAmp: i, factor: 100}
+	return &attrs{strike: i, factor: 100}
 }
 
 func AD(i int) *attrs {

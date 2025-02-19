@@ -8,7 +8,7 @@ func TestAttack(t *testing.T) {
 	g := newGround()
 	g.baseSpeed = 2
 	g.baseAtk = 100
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -32,7 +32,7 @@ func TestAttack(t *testing.T) {
 	g = newGround()
 	g.baseSpeed = 0.5
 	g.baseAtk = 100
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime/2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -60,7 +60,7 @@ func TestEffect(t *testing.T) {
 	g.baseSpeed = 2
 	g.baseAtk = 100
 	g.ae = 330
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -90,7 +90,7 @@ func TestEffectAD(t *testing.T) {
 	g.ae = 330
 	g.aeType = 1
 	g.ad = 200
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -119,7 +119,7 @@ func TestEffectAp(t *testing.T) {
 	g.baseAtk = 100
 	g.ae = 330
 	g.ap = 200
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -148,7 +148,7 @@ func TestEffectAmp(t *testing.T) {
 	g.baseAtk = 100
 	g.ae = 330
 	g.amp = 200
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -177,7 +177,7 @@ func TestEffectCrit(t *testing.T) {
 	g.baseAtk = 100
 	g.ae = 300
 	g.skillCrit = true
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -207,7 +207,7 @@ func TestEffectDoubleExplode(t *testing.T) {
 	g.ae = 110
 	g.asAmp = 200
 	g.atkAmp = 200
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}

@@ -20,6 +20,20 @@ func (g *ground) Sorcerer() *ground {
 	return g
 }
 
+func (g *ground) Fighter() *ground {
+	g.Sword().sterak().Titan().beaten(9)
+	return g
+}
+
+func (g *ground) Beaten(i ...int) *ground {
+	if len(i) == 0 {
+		g.beaten(9)
+	} else {
+		g.beaten(i[0])
+	}
+	return g
+}
+
 func (g *ground) Ranger() *ground {
 	g.Guinsoo().infinity().whisper()
 	return g
@@ -90,10 +104,10 @@ func (g *ground) Book() *ground {
 }
 
 // 挨揍回蓝
-func (g *ground) beaten() *ground {
+func (g *ground) beaten(i int) *ground {
 	p := attrPassive(TimeGoA)
 	p.call = func(g *ground) {
-		restore := g.charge(9)
+		restore := g.charge(i)
 		if !g.locking() {
 			g.mana += restore
 		}
@@ -156,7 +170,7 @@ func (g *ground) blue() *ground {
 }
 
 // 饮血剑
-func (g *ground) sword() *ground {
+func (g *ground) Sword() *ground {
 	g.ad += 15
 	g.ap += 15
 	return g

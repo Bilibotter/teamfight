@@ -72,6 +72,14 @@ func (a *attrs) apAE() bool {
 	return a.aeType == 0
 }
 
+func AE(i int) *attrs {
+	return &attrs{ae: i, factor: 100}
+}
+
+func DoubleStrike(i int) *attrs {
+	return &attrs{asAmp: i, factor: 100}
+}
+
 func AD(i int) *attrs {
 	return &attrs{ad: i, factor: 100}
 }

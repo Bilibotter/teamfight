@@ -12,6 +12,7 @@ type buff struct {
 	g      *ground
 	reduce action
 	remain int
+	end    int
 }
 
 func newB(remain int, a ...*attrs) *buff {
@@ -35,6 +36,9 @@ func (b *buff) key() string {
 }
 
 func (b *buff) valid() bool {
+	if b.reduce == TimeGoA {
+		return b.end >= b.g.ticks
+	}
 	return b.remain > 0
 }
 

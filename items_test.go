@@ -10,7 +10,7 @@ func TestShojin(t *testing.T) {
 	g.Swing(0)
 	g.Shojin()
 	g.mana = 0
-	g.Fight0()
+	g.fight0()
 
 	all, avg, record := g.getAtkRecord()
 	if all != 126*20 || avg != 126 || len(record) != 20 {
@@ -28,7 +28,7 @@ func TestGuinsoo(t *testing.T) {
 	g := Phy(100, 0, 1)
 	g.Guinsoo()
 	g.as = 100
-	g.Fight0()
+	g.fight0()
 	times := g.bonusAS() / 5
 	all, avg, record := g.getAtkRecord()
 	if all != 3630 || avg != 110 || len(record) != times {
@@ -49,7 +49,7 @@ func TestInfinity(t *testing.T) {
 	g.infinity()
 	g.mana = 0
 	g.ad = 100
-	g.Fight0()
+	g.fight0()
 
 	all, avg, record := g.getAtkRecord()
 	if all != 124*20 || avg != 124 || len(record) != 20 {
@@ -70,7 +70,7 @@ func TestStaff(t *testing.T) {
 	g.Staff()
 	g.mana = 0
 	g.ap = 100
-	g.Fight0()
+	g.fight0()
 
 	all, avg, record := g.getAtkRecord()
 	if all != 110*20 || avg != 110 || len(record) != 20 {
@@ -92,7 +92,7 @@ func TestBlue(t *testing.T) {
 	g.mana = 10
 	g.ap = 100
 	g.ad = 100
-	g.Fight0()
+	g.fight0()
 
 	all, avg, record := g.getAtkRecord()
 	if all != 2280 || avg != 114 || len(record) != 20 {
@@ -111,7 +111,7 @@ func TestSilver(t *testing.T) {
 	g.Silver()
 	g.mana = 0
 	g.ad = 100
-	g.Fight0()
+	g.fight0()
 
 	_, avg, _ := g.getAtkRecord()
 	if avg != 118 {
@@ -129,7 +129,7 @@ func TestTitan(t *testing.T) {
 	g.Titan()
 	g.mana = 0
 	g.ad = 100
-	g.Fight0()
+	g.fight0()
 
 	ap, ad := g.ap, g.ad
 	for _, a := range g.attributes {

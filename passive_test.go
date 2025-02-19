@@ -16,7 +16,7 @@ func TestAtkTimes(t *testing.T) {
 	Level(0)
 	g := newGround()
 	g.baseSpeed = 2
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime*2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -27,7 +27,7 @@ func TestAtkTimes(t *testing.T) {
 	reset()
 	g = newGround()
 	g.baseSpeed = 0.5
-	g.Fight0()
+	g.fight0()
 	if g.atkTimes != g.endTime/2 {
 		t.Errorf("atkTimes = %d, want 20", g.atkTimes)
 	}
@@ -38,14 +38,14 @@ func TestAtkTimes(t *testing.T) {
 
 func TestBuff0_0(t *testing.T) {
 	reset()
-	Level(0)
+	Level(3)
 	p := buffPassiveT(AttackA, 3, AP(10))
 	p.freq = 5
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
@@ -63,7 +63,7 @@ func TestBuff0_1(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 2
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
@@ -82,7 +82,7 @@ func TestBuff1_0(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
@@ -100,7 +100,7 @@ func TestBuff1_1(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 2
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
@@ -119,7 +119,7 @@ func TestAttr0_0(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
@@ -135,7 +135,7 @@ func TestAttr0_1(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if g.ability() != 100 {
 		t.Errorf("ability = %d, want 100", g.ability())
 	}
@@ -149,7 +149,7 @@ func TestStack0_0(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if p.overlay.count != 20 {
 		t.Errorf("count = %d, want 20", p.overlay.count)
 	}
@@ -166,7 +166,7 @@ func TestStack0_1(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if p.overlay.count != 3 {
 		t.Errorf("count = %d, want 3", p.overlay.count)
 	}
@@ -183,7 +183,7 @@ func TestStack0_2(t *testing.T) {
 	g.endTime = 20
 	g.baseSpeed = 0.5
 	g.passive(p)
-	g.Fight0()
+	g.fight0()
 	if p.overlay.count != 10 {
 		t.Errorf("count = %d, want 10", p.overlay.count)
 	}

@@ -74,6 +74,24 @@ func attrPassive(trigger action, a ...*attrs) *passive {
 	return p
 }
 
+func (g *ground) StackPassive(trigger action, a ...*attrs) *passive {
+	p := stackPassive(trigger, 1, a...)
+	g.passive(p)
+	return p
+}
+
+func (g *ground) StackPassive0(trigger action, limit, freq int, a ...*attrs) *passive {
+	p := stackPassive0(trigger, limit, freq, a...)
+	g.passive(p)
+	return p
+}
+
+func (g *ground) BuffPassive(trigger action, remain int, a ...*attrs) *passive {
+	p := buffPassive(trigger, remain, a...)
+	g.passive(p)
+	return p
+}
+
 func (p *passive) key() string {
 	segment1, _ := json.Marshal(p.attrs)
 	segment2, _ := json.Marshal(p.trigger)

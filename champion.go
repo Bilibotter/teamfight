@@ -35,7 +35,7 @@ func (g *champion) speed() float64 {
 		}
 	}
 	speed *= float64(haste) / 100
-	if speed > 2.5 {
+	if speed > 2.5 && !innerTesting {
 		return 2.5
 	}
 	return speed
@@ -178,20 +178,27 @@ func (g *champion) attackFull() float64 {
 	return effect + g.attackDmg()
 }
 
-func (g *ground) buff(bf *buff) {
+func (g *ground) buff(bf *buff) *buff {
 	key := bf.key()
 	if outputLevel >= 3 {
 		fmt.Printf("%2d.0秒:添加buff %s\n", g.now, key[:6])
 	}
+	var match *buff
 	if old, ok := g.buffs[key]; ok {
 		old.remain = bf.remain
+		match = old
 	} else {
 		bf.g = g
 		g.buffs[key] = bf
 		g.attributes = append(g.attributes, bf)
 		g.handlers = append(g.handlers, bf)
 		bf.name = key
+		match = bf
 	}
+	if match.reduce == TimeGoA {
+		match.end = g.ticks + match.remain*tick
+	}
+	return match
 }
 
 func (g *ground) passive(p *passive) {

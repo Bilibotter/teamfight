@@ -86,8 +86,18 @@ func (g *ground) StackPassive0(trigger action, limit, freq int, a ...*attrs) *pa
 	return p
 }
 
-func (g *ground) BuffPassive(trigger action, remain int, a ...*attrs) *passive {
+// 只触发一次的被动
+func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
+	p := g.BuffPassive(trigger, freq, 60, a...)
+	p.freq = 0
+	p.once = 1
+	p.left = freq
+	return p
+}
+
+func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := buffPassive(trigger, remain, a...)
+	p.freq = freq
 	g.passive(p)
 	return p
 }

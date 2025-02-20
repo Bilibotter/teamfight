@@ -4,7 +4,7 @@ func (g *ground) Invoker() *ground {
 	if g.skill.cost() >= 60 {
 		g.Shojin()
 	} else {
-		g.blue()
+		g.Blue()
 	}
 	g.Nashor().Jeweled()
 	return g
@@ -14,7 +14,7 @@ func (g *ground) Sorcerer() *ground {
 	if g.skill.cost() >= 60 {
 		g.Shojin()
 	} else {
-		g.blue()
+		g.Blue()
 	}
 	g.deathcap().Jeweled()
 	return g
@@ -35,12 +35,12 @@ func (g *ground) Beaten(i ...int) *ground {
 }
 
 func (g *ground) Ranger() *ground {
-	g.Guinsoo().infinity().whisper()
+	g.Guinsoo().infinity().Whisper()
 	return g
 }
 
 func (g *ground) Blaster() *ground {
-	g.Shojin().infinity().whisper()
+	g.Shojin().infinity().Whisper()
 	return g
 }
 
@@ -141,7 +141,7 @@ func (g *ground) Nashor() *ground {
 }
 
 // 轻语
-func (g *ground) whisper() *ground {
+func (g *ground) Whisper() *ground {
 	g.ad += 15
 	g.as += 20
 	g.critRate += 20
@@ -149,7 +149,7 @@ func (g *ground) whisper() *ground {
 }
 
 // 蓝buff
-func (g *ground) blue() *ground {
+func (g *ground) Blue() *ground {
 	g.mana += 30
 	g.ad += 15
 	g.ap += 15

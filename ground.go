@@ -132,14 +132,16 @@ func (g *ground) fight0() {
 		}
 
 		if g.walk && g.ticks >= walking+walkFreq*tick && step == 0 {
-			fmt.Printf("%4.1f秒:开始逛街\n", g.current())
+			if outputLevel >= 3 {
+				fmt.Printf("%4.1f秒:开始逛街\n", g.current())
+			}
 			step = tick
 			walking = g.ticks
 		}
 
 		if g.walk && step > 0 {
 			step--
-			if step == 1 {
+			if step == 1 && outputLevel >= 3 {
 				fmt.Printf("%4.1f秒:结束逛街\n", g.current())
 			}
 			walking = g.ticks + 1

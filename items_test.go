@@ -88,7 +88,7 @@ func TestBlue(t *testing.T) {
 	g := Mag(100, 0, 1)
 	g.Skill(50, 1000)
 	g.Swing(0)
-	g.blue()
+	g.Blue()
 	g.mana = 10
 	g.ap = 100
 	g.ad = 100

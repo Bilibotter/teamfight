@@ -16,7 +16,7 @@ type skill struct {
 	stackBy  stackType
 	perStack int
 	stackDmg float64
-	solidDmg int // 无加成伤害
+	solidDmg float64 // 无加成伤害
 	call     []func(g *ground)
 	next     *skill
 	mana     int
@@ -64,7 +64,7 @@ func (s *skill) normal(g *ground) {
 		ap *= amp
 		ad *= amp
 	}
-	g.recordDmg((ap+ad)*g.spellAmp(), fromCast)
+	g.recordDmg((ap+ad+s.solidDmg)*g.spellAmp(), fromCast)
 }
 
 func (s *skill) stack() float64 {
@@ -102,6 +102,11 @@ func (g *ground) Skill(mana int, dmg float64, minors ...float64) *ground {
 	sk.call = []func(g *ground){sk.normal}
 	sk.wait = 5
 	return g.addSkill(sk)
+}
+
+func (g *ground) Solid(dmg float64) *ground {
+	g.tail().solidDmg = dmg
+	return g
 }
 
 func (g *ground) Stack(typ stackType, stackDmg float64, perStacks ...int) *ground {

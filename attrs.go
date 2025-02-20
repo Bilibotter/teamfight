@@ -80,6 +80,10 @@ func DoubleStrike(i int) *attrs {
 	return &attrs{strike: i, factor: 100}
 }
 
+func ManaAmp(i int) *attrs {
+	return &attrs{manaAmp: i, factor: 100}
+}
+
 func AD(i int) *attrs {
 	return &attrs{ad: i, factor: 100}
 }

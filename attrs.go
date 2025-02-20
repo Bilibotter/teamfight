@@ -99,3 +99,16 @@ func AS(i int) *attrs {
 func AMP(i int) *attrs {
 	return &attrs{amp: i, factor: 100}
 }
+
+// 技能暴击
+func Critable() *attrs {
+	return &attrs{skillCrit: true}
+}
+
+func CritRate(i int) *attrs {
+	return &attrs{critRate: i, factor: 100}
+}
+
+func CritAmp(i int) *attrs {
+	return &attrs{critAmp: i, factor: 100}
+}

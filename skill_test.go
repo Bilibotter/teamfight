@@ -338,3 +338,39 @@ func TestInspire(t *testing.T) {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 }
+
+func Test2StageCastAp(t *testing.T) {
+	reset()
+	Level(0)
+	g := Mag(100, 0, 2)
+	g.Skill(100, 200, 100).Swing(0).Skill(50, 100, 50).Swing(0)
+	g.skill.wait = 0
+	g.fight0()
+	all, avg, record := g.getAtkRecord()
+	if all != 4400 || avg != 110 || len(record) != 40 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+	all, avg, record = g.getCastRecord()
+	if all != 1200 || avg != 171 || len(record) != 7 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}
+
+func TestCastLoopAp(t *testing.T) {
+	reset()
+	Level(0)
+	g := Mag(100, 0, 2)
+	g.Skill(100, 200, 100).Swing(0).
+		Skill(50, 100, 50).Swing(0).
+		Skill(50, 100, 50).Swing(0).Loop()
+	g.skill.wait = 0
+	g.fight0()
+	all, avg, record := g.getAtkRecord()
+	if all != 4400 || avg != 110 || len(record) != 40 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+	all, avg, record = g.getCastRecord()
+	if all != 1200 || avg != 200 || len(record) != 6 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}

@@ -129,7 +129,10 @@ func (p *passive) process(e event) {
 	if p.once > 1 {
 		return
 	}
-	if p.once == 1 && e.match(p.trigger) {
+	if !e.match(p.trigger) {
+		return
+	}
+	if p.once == 1 {
 		if p.left == 0 {
 			panic("未设定once的临界值")
 		}
@@ -141,10 +144,6 @@ func (p *passive) process(e event) {
 			p.once++
 			p.left-- // 使p.left永远不为0
 		}
-		return
-	}
-
-	if !e.match(p.trigger) {
 		return
 	}
 

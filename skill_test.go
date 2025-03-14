@@ -235,6 +235,44 @@ func TestStackAmp(t *testing.T) {
 	}
 }
 
+func TestStackByAS(t *testing.T) {
+	reset()
+	Level(0)
+	g := Phy(100, 0, 1)
+	g.Skill(40, 10)
+	g.Stack(AsStk, 20, 4)
+	g.Swing(0)
+	g.StackPassive(AttackA, AS(1))
+	g.fight0()
+	all, avg, record := g.getAtkRecord()
+	if all != 110*22 || avg != 110 || len(record) != 22 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+	all, avg, record = g.getCastRecord()
+	if all != 350 || avg != 70 || len(record) != 5 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}
+
+func TestStackByAtk(t *testing.T) {
+	reset()
+	Level(0)
+	g := Phy(100, 0, 1)
+	g.Skill(40, 10)
+	g.Stack(AtkStk, 20, 4)
+	g.Swing(0)
+	g.StackPassive(AttackA, AS(1))
+	g.fight0()
+	all, avg, record := g.getAtkRecord()
+	if all != 110*22 || avg != 110 || len(record) != 22 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+	all, avg, record = g.getCastRecord()
+	if all != 350 || avg != 70 || len(record) != 5 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}
+
 func TestFury(t *testing.T) {
 	reset()
 	Level(0)

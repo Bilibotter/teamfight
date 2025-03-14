@@ -38,13 +38,13 @@ func TestAtkTimes(t *testing.T) {
 
 func TestBuff0_0(t *testing.T) {
 	reset()
-	Level(3)
+	Level(0)
 	p := buffPassiveT(AttackA, 3, AP(10))
 	p.freq = 5
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
@@ -62,7 +62,7 @@ func TestBuff0_1(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 2
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
@@ -81,7 +81,7 @@ func TestBuff1_0(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
@@ -93,19 +93,19 @@ func TestBuff1_0(t *testing.T) {
 
 func TestBuff1_1(t *testing.T) {
 	reset()
-	Level(0)
+	Level(3)
 	p := buffPassiveT(TimeGoA, 3, AP(10))
 	p.freq = 5
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 2
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
 	}
 	if atomic.LoadInt64(&current) != 4 {
-		t.Errorf("current = %d, want 20", atomic.LoadInt64(&current))
+		t.Errorf("current = %d, want 4", atomic.LoadInt64(&current))
 	}
 }
 
@@ -118,7 +118,7 @@ func TestAttr0_0(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 110 {
 		t.Errorf("ability = %d, want 110", g.ability())
@@ -134,7 +134,7 @@ func TestAttr0_1(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if g.ability() != 100 {
 		t.Errorf("ability = %d, want 100", g.ability())
@@ -148,7 +148,7 @@ func TestStack0_0(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if p.overlay.count != 20 {
 		t.Errorf("count = %d, want 20", p.overlay.count)
@@ -165,7 +165,7 @@ func TestStack0_1(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if p.overlay.count != 3 {
 		t.Errorf("count = %d, want 3", p.overlay.count)
@@ -182,13 +182,48 @@ func TestStack0_2(t *testing.T) {
 	g := newGround()
 	g.endTime = 20
 	g.baseSpeed = 0.5
-	g.passive(p)
+	g.addPassive(p)
 	g.fight0()
 	if p.overlay.count != 10 {
 		t.Errorf("count = %d, want 10", p.overlay.count)
 	}
 	if g.ability() != 200 {
 		t.Errorf("ability = %d, want 200", g.ability())
+	}
+}
+
+func TestStack0_3(t *testing.T) {
+	reset()
+	Level(0)
+	p := stackPassive(AttackA, 2, AP(10))
+	g := newGround()
+	g.endTime = 20
+	g.baseSpeed = 0.5
+	g.addPassive(p)
+	g.fight0()
+	if p.overlay.count != 5 {
+		t.Errorf("count = %d, want 10", p.overlay.count)
+	}
+	if g.ability() != 150 {
+		t.Errorf("ability = %d, want 200", g.ability())
+	}
+}
+
+func TestOncePassive(t *testing.T) {
+	reset()
+	Level(0)
+	g := newGround()
+	g.baseAtk = 100
+	g.endTime = 20
+	g.baseSpeed = 0.5
+	g.OncePassive(AttackA, 5, AD(100))
+	g.fight0()
+	if g.physics()-2.0 > 1e-6 {
+		t.Errorf("ability = %f, want 2.0", g.physics())
+	}
+	all, avg, record := g.getAtkRecord()
+	if all != 1650 || avg != 165 || len(record) != 10 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 }
 

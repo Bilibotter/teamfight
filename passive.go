@@ -30,6 +30,7 @@ type passive struct {
 	overlay *stack
 	trigger action
 	freq    int             // 匹配事件全部事件，每多少次事件触发一次
+	count   int             // 与freq结合使用。
 	left    int             // 匹配事件timeGoA，界定的数值/左边界值
 	right   int             // 匹配事件timeGoA，右边界值，不包含右边界
 	call    func(g *ground) // 匹配到事件时调用
@@ -76,29 +77,30 @@ func attrPassive(trigger action, a ...*attrs) *passive {
 
 func (g *ground) StackPassive(trigger action, a ...*attrs) *passive {
 	p := stackPassive(trigger, 1, a...)
-	g.passive(p)
+	g.addPassive(p)
 	return p
 }
 
 func (g *ground) StackPassive0(trigger action, limit, freq int, a ...*attrs) *passive {
 	p := stackPassive0(trigger, limit, freq, a...)
-	g.passive(p)
+	g.addPassive(p)
 	return p
 }
 
 // 只触发一次的被动
 func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
-	p := g.BuffPassive(trigger, freq, 60, a...)
-	p.freq = 0
+	// 蓝发只会触发一次有时限的加速，因此用buff而不是attr实现
+	p := buffPassive(trigger, 30, a...)
+	p.freq = freq
 	p.once = 1
-	p.left = freq
+	g.addPassive(p)
 	return p
 }
 
 func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := buffPassive(trigger, remain, a...)
 	p.freq = freq
-	g.passive(p)
+	g.addPassive(p)
 	return p
 }
 
@@ -129,21 +131,8 @@ func (p *passive) process(e event) {
 	if p.once > 1 {
 		return
 	}
+
 	if !e.match(p.trigger) {
-		return
-	}
-	if p.once == 1 {
-		if p.left == 0 {
-			panic("未设定once的临界值")
-		}
-		p.left--
-		if p.left == 0 {
-			if p.tryCall() && outputLevel >= 3 {
-				fmt.Printf("%4.1f秒:单次被动触发\n", p.g.current())
-			}
-			p.once++
-			p.left-- // 使p.left永远不为0
-		}
 		return
 	}
 
@@ -154,24 +143,27 @@ func (p *passive) process(e event) {
 		return
 	}
 
-	times := 0
-	switch p.trigger {
-	case BeforeCastA, AfterCastA:
-		times = p.g.castTimes
-	case TimeGoA:
-		times = p.g.now
-	case AttackA:
-		times = p.g.atkTimes
-	default:
-		panic("未知频率事件")
+	p.count++
+	if p.count%p.freq != 0 {
+		return
 	}
 
-	enough := times > 0 && times%p.freq == 0
+	if p.once == 1 {
+		if p.tryCall() && outputLevel >= 3 {
+			fmt.Printf("%4.1f秒:单次被动触发\n", p.g.current())
+		}
+		p.once = 2
+		return
+	}
+
+	if p.freq == 0 {
+		if p.tryCall() && outputLevel >= 3 {
+			fmt.Printf("%4.1f秒:常规被动触发\n", p.g.current())
+		}
+		return
+	}
 
 	if p.overlay != nil {
-		if !enough {
-			return
-		}
 		if p.overlay.maxStack == 0 || p.overlay.count < p.overlay.maxStack {
 			p.overlay.count++
 			p.overlay.attrs.factor = p.overlay.count * 100
@@ -192,10 +184,8 @@ func (p *passive) process(e event) {
 		return
 	}
 
-	if enough {
-		if p.tryCall() && outputLevel >= 3 {
-			fmt.Printf("%4.1f秒:频率被动触发\n", p.g.current())
-		}
+	if p.tryCall() && outputLevel >= 3 {
+		fmt.Printf("%4.1f秒:频率被动触发\n", p.g.current())
 	}
 }
 

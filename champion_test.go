@@ -3,7 +3,7 @@ package tft
 import "testing"
 
 func TestSingle(t *testing.T) {
-	Level(3)
+	Level(0)
 	//xerath0 := C.Mag(90, 0, 0.8).
 	//	Skill(120, 375*10).
 	//	Shojin().Staff().Jeweled()

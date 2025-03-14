@@ -208,7 +208,7 @@ func (g *ground) buff(bf *buff) *buff {
 	return match
 }
 
-func (g *ground) passive(p *passive) {
+func (g *ground) addPassive(p *passive) {
 	key := p.key()
 	if _, ok := g.passives[key]; ok {
 		panic(fmt.Sprintf("被动重复%v", *p))

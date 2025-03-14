@@ -15,7 +15,7 @@ func TestMain(m *testing.M) {
 
 func TestNormalCast(t *testing.T) {
 	reset()
-	Level(3)
+	Level(0)
 	g := Phy(100, 0, 2)
 	g.Skill(50, 100, 50)
 	g.skill.wait = 0
@@ -252,7 +252,7 @@ func TestFury(t *testing.T) {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 
-	Level(3)
+	Level(0)
 	g = Phy(100, 0, 2)
 	g.Skill(100, 0)
 	g.Fury(5, TimeGoA, AD(100))

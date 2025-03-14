@@ -58,7 +58,7 @@ func (g *ground) Guinsoo() *ground {
 	g.ap += 10
 	g.as += 10
 	p := stackPassive(AttackA, 1, AS(5))
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }
 
@@ -91,7 +91,7 @@ func (g *ground) Staff() *ground {
 	g.ap += 20
 	g.mana += 15
 	p := stackPassive(TimeGoA, 5, AP(30))
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }
 
@@ -111,7 +111,7 @@ func (g *ground) beaten(i int) *ground {
 			g.mana += restore
 		}
 	}
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }
 
@@ -136,7 +136,7 @@ func (g *ground) Nashor() *ground {
 	g.ap += 10
 	g.as += 10
 	p := buffPassive(BeforeCastA, 5, AS(50))
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }
 
@@ -163,8 +163,8 @@ func (g *ground) Blue() *ground {
 	p1 := attrPassive(AfterCastA)
 	p1.call = f
 
-	g.passive(p0)
-	g.passive(p1)
+	g.addPassive(p0)
+	g.addPassive(p1)
 	return g
 }
 
@@ -198,8 +198,8 @@ func (g *ground) Titan() *ground {
 	g.as += 10
 	p0 := stackPassive0(AttackA, 12, 1, AD(2), AP(2))
 	p1 := stackPassive0(TimeGoA, 13, 1, AD(2), AP(2))
-	g.passive(p0)
-	g.passive(p1)
+	g.addPassive(p0)
+	g.addPassive(p1)
 	return g
 }
 
@@ -208,6 +208,6 @@ func (g *ground) Silver() *ground {
 	g.critRate += 20
 	g.as += 30
 	p := stackPassive0(TimeGoA, 9, 2, AS(3))
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }

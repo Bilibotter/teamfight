@@ -16,7 +16,7 @@ func (g *ground) template(actives ...int) *ground {
 		panic("wrong origin num")
 	}
 	p := attrPassive(TimeGoA, AP(10))
-	g.passive(p)
+	g.addPassive(p)
 	return g
 }
 

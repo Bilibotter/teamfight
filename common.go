@@ -6,6 +6,15 @@ func addBuff(remain int, a ...*attrs) func(*ground) {
 	}
 }
 
+func addMinion(remain int, reduce action, a ...*attrs) func(*ground) {
+	return func(g *ground) {
+		bf := newB(remain, a...)
+		bf.reduce = reduce
+		bf.unique = true
+		g.buff(bf)
+	}
+}
+
 func addFreeBuff(remain int, reduce action, a ...*attrs) func(*ground) {
 	return func(g *ground) {
 		bf := newB(remain, a...)

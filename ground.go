@@ -268,16 +268,18 @@ func (g *ground) locking() bool {
 }
 
 func (g *ground) showStatus() {
-	ad, ap, amp, effect := g.ad, g.ap, g.amp, g.ae
+	ad, ap, amp, effect, atkAmp := g.ad, g.ap, g.amp, g.ae, g.atkAmp
 	for _, a := range g.attributes {
 		if a.valid() {
 			ad += a.body().ad
 			ap += a.body().ap
 			amp += a.body().amp
 			effect += a.body().ae
+			atkAmp += a.body().atkAmp
 		}
 	}
 	fmt.Printf("%4.1f秒:Ad=%d, Ap=%d, BonusSpeed=%d, Amp=%d, Effect=%d\n", g.current(), ad, ap, g.bonusAS(), amp, effect)
+	fmt.Printf("%4.1f秒:AtkAmp=%d\n", g.current(), atkAmp)
 }
 
 func (g *ground) recordDmg(dmg float64, source dmgSource) {

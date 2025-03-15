@@ -23,7 +23,7 @@ type attrs struct {
 	aeType    int  // 附带特效类型,0为ap加成
 	strike    int  // 触发双重打击的概率
 	amp       int  // 伤害增幅
-	atkAmp    int  // 普攻增幅
+	atkAmp    int  // 普攻增幅，金克斯火箭，泽丽镜像，月男炮台，凯隐旋转
 	castAmp   int  // 施法增幅
 	critRate  int  // 暴击率
 	critAmp   int  // 暴击伤害
@@ -78,6 +78,10 @@ func AE(i int) *attrs {
 
 func DoubleStrike(i int) *attrs {
 	return &attrs{strike: i, factor: 100}
+}
+
+func AtkAmp(i int) *attrs {
+	return &attrs{atkAmp: i, factor: 100}
 }
 
 func ManaAmp(i int) *attrs {

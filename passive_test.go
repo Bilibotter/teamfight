@@ -128,16 +128,21 @@ func TestAttr0_0(t *testing.T) {
 func TestAttr0_1(t *testing.T) {
 	reset()
 	Level(0)
-	p := attrPassive(TimeGoA, AP(10))
+	p := attrPassive(TimeGoA, AD(10))
 	p.left = 5
 	p.right = 10
 	g := newGround()
 	g.endTime = 20
-	g.baseSpeed = 0.5
+	g.baseSpeed = 1.0
+	g.baseAtk = 100
 	g.addPassive(p)
 	g.fight0()
-	if g.ability() != 100 {
-		t.Errorf("ability = %d, want 100", g.ability())
+	if g.physics()-1.0 > 1e-6 {
+		t.Errorf("ability = %f, want 1.0", g.physics())
+	}
+	all, avg, record := g.getAtkRecord()
+	if all != 2255 || avg != 112 || len(record) != 20 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 }
 
@@ -223,6 +228,22 @@ func TestOncePassive(t *testing.T) {
 	}
 	all, avg, record := g.getAtkRecord()
 	if all != 1650 || avg != 165 || len(record) != 10 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}
+
+func TestMinionPassive(t *testing.T) {
+	reset()
+	Level(0)
+	g := newGround()
+	g.baseAtk = 100
+	g.endTime = 20
+	g.baseSpeed = 1.0
+	g.Minion(BeforeCastA, 1, 6, AtkAmp(30))
+	g.Skill(40, 0).Swing(0)
+	g.fight0()
+	all, avg, record := g.getAtkRecord()
+	if all != 2926 || avg != 146 || len(record) != 20 {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 }

@@ -37,6 +37,14 @@ type passive struct {
 	once    int             // once:0表示无限次,1表示只触发一次,2表示已触发
 }
 
+func minionPassive(trigger action, remain int, a ...*attrs) *passive {
+	p := &passive{
+		trigger: trigger,
+		call:    addMinion(remain, TimeGoA, a...),
+	}
+	return p
+}
+
 func buffPassive(trigger action, remain int, a ...*attrs) *passive {
 	p := &passive{
 		trigger: trigger,
@@ -99,6 +107,14 @@ func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
 
 func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := buffPassive(trigger, remain, a...)
+	p.freq = freq
+	g.addPassive(p)
+	return p
+}
+
+// 泽丽召唤镜像，月男召唤炮台
+func (g *ground) Minion(trigger action, freq, remain int, a ...*attrs) *passive {
+	p := minionPassive(trigger, remain, a...)
 	p.freq = freq
 	g.addPassive(p)
 	return p

@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
+	"github.com/google/uuid"
 )
 
 type buff struct {
@@ -13,6 +14,7 @@ type buff struct {
 	reduce action
 	remain int
 	end    int
+	unique bool // 镜像，即可重复存在但持续时间单独计算
 }
 
 func newB(remain int, a ...*attrs) *buff {
@@ -24,6 +26,9 @@ func newB(remain int, a ...*attrs) *buff {
 }
 
 func (b *buff) key() string {
+	if b.unique {
+		return uuid.New().String()
+	}
 	segment1, _ := json.Marshal(b.attrs)
 	segment2, _ := json.Marshal(b.reduce)
 	// 创建 SHA256 哈希对象

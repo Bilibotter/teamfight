@@ -248,6 +248,20 @@ func TestMinionPassive(t *testing.T) {
 	}
 }
 
+func TestDmgPassive(t *testing.T) {
+	reset()
+	Level(0)
+	g := newGround()
+	g.endTime = 20
+	g.baseSpeed = 1.0
+	g.DmgPassive(AttackA, 2, 100)
+	g.fight0()
+	all, avg, record := g.getSecRecord()
+	if all != 1000 || avg != 50 || len(record) != 21 {
+		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
+	}
+}
+
 func buffPassiveT(trigger action, remain int, a ...*attrs) *passive {
 	f := addBuff(remain, a...)
 	call := func(g *ground) {

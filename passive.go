@@ -105,6 +105,19 @@ func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
 	return p
 }
 
+// 类似无人机
+func (g *ground) DmgPassive(trigger action, freq, dmg int) *passive {
+	p := &passive{
+		trigger: trigger,
+		freq:    freq,
+		call: func(g *ground) {
+			g.recordDmg(float64(dmg), fromPassive)
+		},
+	}
+	g.addPassive(p)
+	return p
+}
+
 func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := buffPassive(trigger, remain, a...)
 	p.freq = freq

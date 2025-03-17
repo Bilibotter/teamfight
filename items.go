@@ -1,5 +1,6 @@
 package tft
 
+// 高频施法
 func (g *ground) Invoker() *ground {
 	if g.skill.cost() >= 60 {
 		g.Shojin()
@@ -10,13 +11,14 @@ func (g *ground) Invoker() *ground {
 	return g
 }
 
+// 爆发施法
 func (g *ground) Sorcerer() *ground {
 	if g.skill.cost() >= 60 {
 		g.Shojin()
 	} else {
 		g.Blue()
 	}
-	g.deathcap().Jeweled()
+	g.Breaker().Jeweled()
 	return g
 }
 
@@ -35,12 +37,12 @@ func (g *ground) Beaten(i ...int) *ground {
 }
 
 func (g *ground) Ranger() *ground {
-	g.Guinsoo().infinity().Whisper()
+	g.Guinsoo().Infinity().Whisper()
 	return g
 }
 
 func (g *ground) Blaster() *ground {
-	g.Shojin().infinity().Whisper()
+	g.Shojin().Infinity().Whisper()
 	return g
 }
 
@@ -62,8 +64,16 @@ func (g *ground) Guinsoo() *ground {
 	return g
 }
 
+func (g *ground) DoubleGuinsoo() *ground {
+	g.ap += 20
+	g.as += 20
+	p := stackPassive(AttackA, 1, AS(10))
+	g.addPassive(p)
+	return g
+}
+
 // 无尽
-func (g *ground) infinity() *ground {
+func (g *ground) Infinity() *ground {
 	if g.critable() {
 		g.critAmp += 10
 	} else {
@@ -116,18 +126,18 @@ func (g *ground) beaten(i int) *ground {
 }
 
 // 帽子
-func (g *ground) deathcap() *ground {
+func (g *ground) DeathCap() *ground {
 	g.ap += 50
 	g.amp += 15
 	return g
 }
 
 // 巨杀
-func (g *ground) slayer() *ground {
+func (g *ground) GiantSlayer() *ground {
 	g.ad += 25
 	g.ap += 25
 	g.as += 10
-	g.amp += 20
+	g.amp += 18
 	return g
 }
 
@@ -188,8 +198,8 @@ func (g *ground) Justice() *ground {
 func (g *ground) sterak() *ground {
 	g.ad += 15
 	p := attrPassive(TimeGoA, AD(35))
-	p.left = 8
-	p.right = 30
+	p.Left = 8
+	p.Right = 30
 	return g
 }
 
@@ -209,5 +219,45 @@ func (g *ground) Silver() *ground {
 	g.as += 30
 	p := stackPassive0(TimeGoA, 9, 2, AS(3))
 	g.addPassive(p)
+	return g
+}
+
+// 破防
+func (g *ground) Breaker() *ground {
+	g.as += 20
+	g.ap += 10
+	g.critRate += 20
+	g.amp += 10
+	g.BuffPassive(BeforeCastA, 1, 3, AMP(15))
+	return g
+}
+
+func (g *ground) Red() *ground {
+	g.as += 35
+	g.amp += 6
+	return g
+}
+
+// 复活甲
+func (g *ground) Night() *ground {
+	g.as += 10
+	p := attrPassive(TimeGoA, AS(15))
+	p.Left = 8
+	p.Right = 30
+	g.addPassive(p)
+	return g
+}
+
+// 科技枪
+func (g *ground) Gunblade() *ground {
+	g.ad += 20
+	g.ap += 20
+	return g
+}
+
+// 杀人剑
+func (g *ground) DeathBlade() *ground {
+	g.ad += 55
+	g.amp += 10
 	return g
 }

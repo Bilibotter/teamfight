@@ -14,11 +14,11 @@ type stack struct {
 }
 
 /*
-freq: 到达一定频次再执行call。用于周期触发被动与可叠加被动。
+Freq: 到达一定频次再执行call。用于周期触发被动与可叠加被动。
 once: 1: 表示被动只触发一次，2: 表示已触发
-left：once=1，表示被动触发的阈值; once=0，表示时间段被动的左边界，包含边界值。
-right：表示时间段被动的右边界，不包含边界值。
-trigger：表示触发call的事件类型。
+Left：once=1，表示被动触发的阈值; once=0，表示时间段被动的左边界，包含边界值。
+Right：表示时间段被动的右边界，不包含边界值。
+Trigger：表示触发call的事件类型。
 
 	频次+可叠加被动支持触发类型：TimeGo、Cast、Attack
 	时间段被动支持触发类型：TimeGo
@@ -28,18 +28,18 @@ type passive struct {
 	name    string
 	g       *ground
 	overlay *stack
-	trigger action
-	freq    int             // 匹配事件全部事件，每多少次事件触发一次
-	count   int             // 与freq结合使用。
-	left    int             // 匹配事件timeGoA，界定的数值/左边界值
-	right   int             // 匹配事件timeGoA，右边界值，不包含右边界
+	Trigger action
+	Freq    int             // 匹配事件全部事件，每多少次事件触发一次
+	Count   int             // 与freq结合使用。
+	Left    int             // 匹配事件timeGoA，界定的数值/左边界值
+	Right   int             // 匹配事件timeGoA，右边界值，不包含右边界
 	call    func(g *ground) // 匹配到事件时调用
 	once    int             // once:0表示无限次,1表示只触发一次,2表示已触发
 }
 
 func minionPassive(trigger action, remain int, a ...*attrs) *passive {
 	p := &passive{
-		trigger: trigger,
+		Trigger: trigger,
 		call:    addMinion(remain, TimeGoA, a...),
 	}
 	return p
@@ -47,7 +47,7 @@ func minionPassive(trigger action, remain int, a ...*attrs) *passive {
 
 func buffPassive(trigger action, remain int, a ...*attrs) *passive {
 	p := &passive{
-		trigger: trigger,
+		Trigger: trigger,
 		call:    addBuff(remain, a...),
 	}
 	return p
@@ -63,10 +63,10 @@ func stackPassive0(trigger action, limit, freq int, a ...*attrs) *passive {
 		attr.Add(add)
 	}
 	p := &passive{
-		attrs:   attr,
+		attrs:   attrs{}, // 修复叠加被动天生自带一层
 		overlay: &stack{attrs: attr, maxStack: limit},
-		trigger: trigger,
-		freq:    freq,
+		Trigger: trigger,
+		Freq:    freq,
 	}
 	return p
 }
@@ -78,7 +78,7 @@ func attrPassive(trigger action, a ...*attrs) *passive {
 	}
 	p := &passive{
 		attrs:   attr,
-		trigger: trigger,
+		Trigger: trigger,
 	}
 	return p
 }
@@ -99,7 +99,7 @@ func (g *ground) StackPassive0(trigger action, limit, freq int, a ...*attrs) *pa
 func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
 	// 蓝发只会触发一次有时限的加速，因此用buff而不是attr实现
 	p := buffPassive(trigger, 30, a...)
-	p.freq = freq
+	p.Freq = freq
 	p.once = 1
 	g.addPassive(p)
 	return p
@@ -108,8 +108,8 @@ func (g *ground) OncePassive(trigger action, freq int, a ...*attrs) *passive {
 // 类似无人机
 func (g *ground) DmgPassive(trigger action, freq, dmg int) *passive {
 	p := &passive{
-		trigger: trigger,
-		freq:    freq,
+		Trigger: trigger,
+		Freq:    freq,
 		call: func(g *ground) {
 			g.recordDmg(float64(dmg), fromPassive)
 		},
@@ -120,7 +120,7 @@ func (g *ground) DmgPassive(trigger action, freq, dmg int) *passive {
 
 func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := buffPassive(trigger, remain, a...)
-	p.freq = freq
+	p.Freq = freq
 	g.addPassive(p)
 	return p
 }
@@ -128,15 +128,15 @@ func (g *ground) BuffPassive(trigger action, freq, remain int, a ...*attrs) *pas
 // 泽丽召唤镜像，月男召唤炮台
 func (g *ground) Minion(trigger action, freq, remain int, a ...*attrs) *passive {
 	p := minionPassive(trigger, remain, a...)
-	p.freq = freq
+	p.Freq = freq
 	g.addPassive(p)
 	return p
 }
 
 func (p *passive) key() string {
 	segment1, _ := json.Marshal(p.attrs)
-	segment2, _ := json.Marshal(p.trigger)
-	segment3, _ := json.Marshal((p.freq*1 + 1) * (p.left*10 + 10) * (p.right*100 + 100))
+	segment2, _ := json.Marshal(p.Trigger)
+	segment3, _ := json.Marshal((p.Freq*1 + 1) * (p.Left*10 + 10) * (p.Right*100 + 100))
 	// 创建 SHA256 哈希对象
 	h := sha256.New()
 	// 写入 JSON 数据
@@ -149,8 +149,8 @@ func (p *passive) key() string {
 
 // valid的被动的attr才会应用于champion
 func (p *passive) valid() bool {
-	if p.trigger == TimeGoA && p.left+p.right > 0 {
-		return p.g.now >= p.left && p.g.now < p.right
+	if p.Trigger == TimeGoA && p.Left+p.Right > 0 {
+		return p.g.now >= p.Left && p.g.now < p.Right
 	}
 	return p.once == 0
 }
@@ -161,19 +161,19 @@ func (p *passive) process(e event) {
 		return
 	}
 
-	if !e.match(p.trigger) {
+	if !e.match(p.Trigger) {
 		return
 	}
 
-	if p.freq == 0 {
+	if p.Freq == 0 {
 		if p.tryCall() && outputLevel >= 3 {
 			fmt.Printf("%4.1f秒:常规被动触发\n", p.g.current())
 		}
 		return
 	}
 
-	p.count++
-	if p.count%p.freq != 0 {
+	p.Count++
+	if p.Count%p.Freq != 0 {
 		return
 	}
 
@@ -185,7 +185,7 @@ func (p *passive) process(e event) {
 		return
 	}
 
-	if p.freq == 0 {
+	if p.Freq == 0 {
 		if p.tryCall() && outputLevel >= 3 {
 			fmt.Printf("%4.1f秒:常规被动触发\n", p.g.current())
 		}

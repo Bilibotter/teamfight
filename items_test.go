@@ -46,7 +46,7 @@ func TestInfinity(t *testing.T) {
 	g := Phy(100, 0, 1)
 	g.Skill(40, 1000)
 	g.Swing(0)
-	g.infinity()
+	g.Infinity()
 	g.mana = 0
 	g.ad = 100
 	g.fight0()

@@ -124,13 +124,13 @@ func (g *ground) Stack(typ stackType, stackDmg float64, perStacks ...int) *groun
 
 // 释放技能进入暴怒，暴怒期间无法获得法力
 func (g *ground) Fury(duration int, reduce action, bf ...*attrs) *ground {
-	g.tail().call = append(g.skill.call, addLockBuff(duration, reduce, bf...))
+	g.tail().call = append(g.tail().call, addLockBuff(duration, reduce, bf...))
 	return g
 }
 
 // 释放技能进入振奋，振奋期间可以获得法力
 func (g *ground) Inspire(duration int, reduce action, bf ...*attrs) *ground {
-	g.tail().call = append(g.skill.call, addFreeBuff(duration, reduce, bf...))
+	g.tail().call = append(g.tail().call, addFreeBuff(duration, reduce, bf...))
 	return g
 }
 

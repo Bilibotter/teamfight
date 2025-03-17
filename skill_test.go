@@ -361,7 +361,7 @@ func TestInspire(t *testing.T) {
 		t.Errorf("Wrong.%d, %d, %v", all, avg, record)
 	}
 
-	Level(0)
+	Level(3)
 	g = Phy(100, 0, 1)
 	g.Skill(50, 0)
 	g.Fury(5, AttackA, AD(100))
@@ -396,7 +396,7 @@ func Test2StageCastAp(t *testing.T) {
 
 func TestCastLoopAp(t *testing.T) {
 	reset()
-	Level(0)
+	Level(3)
 	g := Mag(100, 0, 2)
 	g.Skill(100, 200, 100).Swing(0).
 		Skill(50, 100, 50).Swing(0).

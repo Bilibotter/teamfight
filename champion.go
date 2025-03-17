@@ -172,6 +172,20 @@ func (g *champion) attackDmg() float64 {
 	return g.crit() * g.baseAtk * g.physics() * g.explode()
 }
 
+// todo 消除重复代码
+func (g *champion) effectDmg() float64 {
+	effect := g.effect()
+	if g.apAE() {
+		effect *= g.magic()
+	} else {
+		effect *= g.physics()
+	}
+	if g.critable() {
+		return g.crit() * effect
+	}
+	return effect
+}
+
 func (g *champion) attackFull() float64 {
 	effect := g.effect()
 	if g.apAE() {

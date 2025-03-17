@@ -68,8 +68,8 @@ func (a *attrs) fac() int {
 	return a.factor
 }
 
-func (a *attrs) apAE() bool {
-	return a.aeType == 0
+func (g *champion) apAE() bool {
+	return g.dmgType == magHero
 }
 
 func AE(i int) *attrs {

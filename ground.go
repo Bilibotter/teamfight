@@ -39,10 +39,17 @@ type ground struct {
 
 const (
 	tick = 1000
+	fac  = 1.8
 )
+
+var useFac = false
 
 func Level(level int) {
 	outputLevel = level
+}
+
+func Fac() {
+	useFac = true
 }
 
 func Mag(baseAtk int, startMana int, baseSpeed ...float64) *ground {
@@ -60,6 +67,9 @@ func Mag(baseAtk int, startMana int, baseSpeed ...float64) *ground {
 func Phy(baseAtk int, startMana int, baseSpeed ...float64) *ground {
 	g := newGround()
 	g.dmgType = phyHero
+	if useFac {
+		g.baseAtk = float64(baseAtk) * fac
+	}
 	g.baseAtk = float64(baseAtk)
 	g.baseSpeed = 0.75
 	if len(baseSpeed) == 1 {
@@ -206,7 +216,6 @@ func (g *ground) attack() float64 {
 	dmg := g.attackFull()
 	g.recordDmg(dmg, fromAttack)
 	g.atkTimes += 1
-	g.process(newE(AttackA, g.atkTimes))
 	if outputLevel >= 3 && !g.locking() {
 		fmt.Printf("%4.1f秒:第%d次攻击，伤害%.0f, 回复法力值%d\n", g.current(), g.atkTimes, dmg, g.atkMana())
 	}
@@ -216,6 +225,8 @@ func (g *ground) attack() float64 {
 	if !g.locking() {
 		g.mana += g.atkMana()
 	}
+	// 先回蓝再扣除绑定攻击次数的法力锁
+	g.process(newE(AttackA, g.atkTimes))
 	return dmg
 }
 
@@ -244,7 +255,7 @@ func (g *ground) summary() {
 		atkAvg = atkDmg / len(g.atkRecord)
 	}
 	percent := float64(castDmg) / float64(allDmg)
-	output := fmt.Sprintf("%-5s(%.0f秒) dsp=%d, castTime=%d, atkTime=%d, castAvg=%d, atkAvg=%d, skillPct=%.1f\n", name, g.current(), dps, len(g.castRecord), len(g.atkRecord), castAvg, atkAvg, percent)
+	output := fmt.Sprintf("%-5s(%.0f秒) dps=%d, castTime=%d, atkTime=%d, castAvg=%d, atkAvg=%d, skillPct=%.1f\n", name, g.current(), dps, len(g.castRecord), len(g.atkRecord), castAvg, atkAvg, percent)
 	if disableOutput {
 		results = append(results, result{output: output, dps: dps})
 	} else {
@@ -278,8 +289,11 @@ func (g *ground) showStatus() {
 			atkAmp += a.body().atkAmp
 		}
 	}
+	if outputLevel == 0 {
+		return
+	}
 	fmt.Printf("%4.1f秒:Ad=%d, Ap=%d, BonusSpeed=%d, Amp=%d, Effect=%d\n", g.current(), ad, ap, g.bonusAS(), amp, effect)
-	fmt.Printf("%4.1f秒:AtkAmp=%d\n", g.current(), atkAmp)
+	fmt.Printf("%4.1f秒:AtkAmp=%d, AeDmg=%.0f, Speed=%.1f\n", g.current(), atkAmp, g.effectDmg(), g.speed())
 }
 
 func (g *ground) recordDmg(dmg float64, source dmgSource) {

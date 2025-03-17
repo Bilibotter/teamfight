@@ -113,8 +113,9 @@ func TestEffectAD(t *testing.T) {
 
 func TestEffectAp(t *testing.T) {
 	reset()
-	Level(0)
+	Level(3)
 	g := newGround()
+	g.dmgType = magHero
 	g.baseSpeed = 2
 	g.baseAtk = 100
 	g.ae = 330

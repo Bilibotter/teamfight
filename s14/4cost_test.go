@@ -93,15 +93,34 @@ func Test4Cost(t *testing.T) {
 
 	// 火球数受A.M.P影响
 	// 提伯斯普攻伤害大约为坠落伤害的2/3
+	amp := 4
 	annie := C.Mag(45, 0, 0.75).
-		Skill(40, 265+2*60).
-		Skill(40, 265+2*60).
-		Skill(40, 265+2*60).
-		Skill(40, 405).Inspire(6, C.TimeGoA, C.AE(405*3/2)).Loop()
-	annie.Fight("Annie")
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 405).Loop()
+	annie.Minion(C.BeforeCastA, 4, 8, C.AE(405*2/3))
+	annie.Blue().Nashor().Jeweled()
+	annie.GoldenOx(2)
+	annie.Fight("Annie<4>")
+
+	amp = 5
+	annie = C.Mag(45, 0, 0.75).
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 265+2*60+C.Overload(amp)*60).
+		Skill(40, 405).Loop()
+	annie.Minion(C.BeforeCastA, 4, 8, C.AE(405*2/3))
+	annie.Blue().Nashor().Jeweled()
+	annie.GoldenOx(2)
+	annie.Fight("Annie<5>")
 
 	brand := C.Mag(53, 25, 0.75).
-		Skill(75, 300+150*4)
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().Breaker().Jeweled() // 纳什也可以，帽子/巨杀差很多
 	brand.Fight("Brand")
 
 	C.FormatResult()
@@ -109,15 +128,13 @@ func Test4Cost(t *testing.T) {
 
 func TestSingle4Cost(t *testing.T) {
 	C.Level(3)
-	amp := 4
-	annie := C.Mag(45, 0, 0.75).
-		Skill(40, 265+2*60+C.Overload(amp)*60).
-		Skill(40, 265+2*60+C.Overload(amp)*60).
-		Skill(40, 265+2*60+C.Overload(amp)*60).
-		Skill(40, 405).Inspire(8, C.TimeGoA, C.AE(405*3/2)).Loop()
-	annie.Blue().Nashor().Jeweled()
-	annie.GoldenOx(2)
-	annie.Fight("Annie")
+	brand := C.Mag(53, 25, 0.75).
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().Breaker().Jeweled()
+	brand.Fight("Brand")
 }
 
 func TestItemsZeri(t *testing.T) {
@@ -309,5 +326,41 @@ func TestItemsAnnie(t *testing.T) {
 	annie.GoldenOx(2)
 	annie.Fight("Annie")
 
+	C.FormatResult()
+}
+
+func TestItemsBrand(t *testing.T) {
+	C.SortAnalyze()
+	brand := C.Mag(53, 25, 0.75).
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().Nashor().Jeweled()
+	brand.Fight("brand.Shojin().Nashor().Jeweled()")
+
+	brand = C.Mag(53, 25, 0.75).
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().Breaker().Jeweled()
+	brand.Fight("brand.Shojin().Breaker().Jeweled()")
+
+	brand = C.Mag(53, 25, 0.75).
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().GiantSlayer().Jeweled()
+	brand.Fight("brand.Shojin().GiantSlayer().Jeweled()")
+
+	brand = C.Mag(53, 25, 0.75).
+		Skill(75, 300*3+150*4).
+		Swing(17) // 04:05:90 04:07:60
+	brand.StreetDemon(7)
+	brand.Techie(2)
+	brand.Shojin().DeathCap().Jeweled()
+	brand.Fight("brand.Shojin().DeathCap().Jeweled()")
 	C.FormatResult()
 }

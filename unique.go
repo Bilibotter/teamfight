@@ -2,7 +2,16 @@ package tft
 
 import "fmt"
 
-func (g *ground) YunnmiAmp(actives ...int) *ground {
+func (g *ground) KBK() *ground {
+	g.BuffPassive(BeforeCastA, 1, 8, AS(100))
+	p := g.OncePassive(BeforeCastA, 1)
+	p.call = func(g *ground) {
+		g.mana += 100
+	}
+	return g
+}
+
+func (g *ground) YuumiAmp(actives ...int) *ground {
 	active := 2
 	if len(actives) != 0 {
 		active = actives[0]

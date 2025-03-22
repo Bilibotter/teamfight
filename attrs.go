@@ -1,5 +1,10 @@
 package tft
 
+import (
+	"fmt"
+	"strings"
+)
+
 type processI interface {
 	process(event)
 }
@@ -64,6 +69,66 @@ func (a *attrs) Add(src *attrs) *attrs {
 	return a
 }
 
+// kimi生成
+func (a *attrs) Signature() string {
+	var sb strings.Builder
+
+	// 检查每个字段是否不为空，并写入前缀和数值
+	if a.factor != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "factor", a.factor))
+	}
+	if a.ad != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "ad", a.ad))
+	}
+	if a.ap != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "ap", a.ap))
+	}
+	if a.as != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "as", a.as))
+	}
+	if a.ae != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "ae", a.ae))
+	}
+	if a.aeType != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "aeType", a.aeType))
+	}
+	if a.strike != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "strike", a.strike))
+	}
+	if a.amp != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "amp", a.amp))
+	}
+	if a.atkAmp != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "atkAmp", a.atkAmp))
+	}
+	if a.castAmp != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "castAmp", a.castAmp))
+	}
+	if a.critRate != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "critRate", a.critRate))
+	}
+	if a.critAmp != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "critAmp", a.critAmp))
+	}
+	if a.skillCrit {
+		sb.WriteString(fmt.Sprintf("%s%d", "skillCrit", 1))
+	}
+	if a.hitMana != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "hitMana", a.hitMana))
+	}
+	if a.manaSrk != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "manaSrk", a.manaSrk))
+	}
+	if a.manaAmp != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "manaAmp", a.manaAmp))
+	}
+	if a.manaDec != 0 {
+		sb.WriteString(fmt.Sprintf("%s%d", "manaDec", a.manaDec))
+	}
+
+	return sb.String()
+}
+
 func (a *attrs) fac() int {
 	return a.factor
 }
@@ -82,6 +147,10 @@ func DoubleStrike(i int) *attrs {
 
 func AtkAmp(i int) *attrs {
 	return &attrs{atkAmp: i, factor: 100}
+}
+
+func CastAmp(i int) *attrs {
+	return &attrs{castAmp: i, factor: 100}
 }
 
 func ManaAmp(i int) *attrs {

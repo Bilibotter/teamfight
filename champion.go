@@ -38,8 +38,9 @@ func (g *champion) speed() float64 {
 		}
 	}
 	speed *= float64(haste) / 100
-	if speed > 2.5 && !innerTesting {
-		return 2.5
+	// 攻速上限为5.0而不是2.5
+	if speed > 5.0 && !innerTesting {
+		return 5.0
 	}
 	return speed
 }

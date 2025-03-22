@@ -27,6 +27,7 @@ func addLockBuff(remain int, reduce action, a ...*attrs) func(*ground) {
 	return func(g *ground) {
 		bf := newB(remain, a...)
 		bf.reduce = reduce
-		g.locks = append(g.locks, g.buff(bf))
+		cp := g.buff(bf)
+		g.locks = append(g.locks, cp)
 	}
 }

@@ -181,7 +181,7 @@ func (g *ground) fight0() {
 				fmt.Printf("%4.1f秒:第%d次施法伤害%d\n", g.current(), g.castTimes, g.castRecord[len(g.castRecord)-1])
 			}
 			// 懒得改测试用例
-			if !innerTesting {
+			if !innerTesting && g.endTime <= 20 {
 				// 很难打满20秒，选择在施法后结束
 				if g.now >= 15 && g.skill.cost() > 100 {
 					end = (g.now + 1) * tick

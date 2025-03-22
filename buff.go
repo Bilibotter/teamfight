@@ -1,9 +1,6 @@
 package tft
 
 import (
-	"crypto/sha256"
-	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 )
 
@@ -15,6 +12,21 @@ type buff struct {
 	remain int
 	end    int
 	unique bool // 镜像，即可重复存在但持续时间单独计算
+}
+
+func (a action) String() string {
+	switch a {
+	case AttackA:
+		return "Attack"
+	case BeforeCastA:
+		return "Cast-"
+	case AfterCastA:
+		return "Cast+"
+	case TimeGoA:
+		return "TimeGo"
+	default:
+		panic("wrong action")
+	}
 }
 
 func newB(remain int, a ...*attrs) *buff {
@@ -29,15 +41,16 @@ func (b *buff) key() string {
 	if b.unique {
 		return uuid.New().String()
 	}
-	segment1, _ := json.Marshal(b.attrs)
-	segment2, _ := json.Marshal(b.reduce)
-	// 创建 SHA256 哈希对象
-	h := sha256.New()
-	// 写入 JSON 数据
-	h.Write(segment1)
-	h.Write(segment2)
-	// 获取哈希值
-	return fmt.Sprintf("%x", h.Sum(nil))
+	return b.attrs.Signature() + b.reduce.String()
+	//segment1, _ := json.Marshal(b.attrs)
+	//segment2, _ := json.Marshal(b.reduce)
+	//// 创建 SHA256 哈希对象
+	//h := sha256.New()
+	//// 写入 JSON 数据
+	//h.Write(segment1)
+	//h.Write(segment2)
+	//// 获取哈希值
+	//return fmt.Sprintf("%x", h.Sum(nil))
 }
 
 func (b *buff) valid() bool {

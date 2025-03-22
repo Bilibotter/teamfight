@@ -72,11 +72,14 @@ func (g *ground) BoomBots(actives ...int) *ground {
 	}
 	switch active {
 	case 2:
-		g.Add(AMP(37))
+		g.Add(AtkAmp(37))
+		g.Add(CastAmp(37))
 	case 4:
-		g.Add(AMP(82))
+		g.Add(AtkAmp(82))
+		g.Add(CastAmp(82))
 	case 6:
-		g.Add(AMP(100))
+		g.Add(AtkAmp(100))
+		g.Add(CastAmp(100))
 	default:
 		panic("wrong origin num")
 	}
@@ -124,8 +127,7 @@ func (g *ground) Cypher(actives ...int) *ground {
 }
 
 // 神法兵团本地人
-func (g *ground) Divinicorps(atrs ...*attrs) *ground {
-	actives := len(atrs)
+func (g *ground) Divinicorps(actives int, atrs ...*attrs) *ground {
 	increse := 100
 	switch actives {
 	case 1:
@@ -135,13 +137,13 @@ func (g *ground) Divinicorps(atrs ...*attrs) *ground {
 	case 3:
 		increse = 125
 	case 4:
-		increse = 145
+		increse = 150
 	case 5:
-		increse = 164
+		increse = 175
 	case 6:
-		increse = 185
+		increse = 200
 	case 7:
-		increse = 2
+		increse = 225
 	default:
 		panic("wrong origin num")
 	}
@@ -164,9 +166,9 @@ func (g *ground) GoldenOx(actives ...int) *ground {
 	case 2:
 		g.Add(AMP(18 + gold*20/100))
 	case 4:
-		g.Add(AMP(20 + gold*30/100))
+		g.Add(AMP(20 + gold*40/100))
 	case 6:
-		g.Add(AMP(22 + gold*50/100))
+		g.Add(AMP(22 + gold*66/100))
 	default:
 		panic("wrong origin num")
 	}
@@ -320,7 +322,7 @@ func (g *ground) Marksman(actives ...int) *ground {
 	case 2:
 		increase = 18
 	case 4:
-		increase = 45
+		increase = 64
 	default:
 		panic("wrong origin num")
 	}
@@ -378,13 +380,34 @@ func (g *ground) Strategist(actives ...int) *ground {
 	}
 	switch active {
 	case 2:
-		g.Add(AMP(7 * 3))
+		g.Add(AMP(6 * 3))
 	case 3:
-		g.Add(AMP(11 * 3))
+		g.Add(AMP(9 * 3))
 	case 4:
-		g.Add(AMP(16 * 3))
+		g.Add(AMP(12 * 3))
 	case 5:
-		g.Add(AMP(20 * 3))
+		g.Add(AMP(15 * 3))
+	default:
+		panic("wrong origin num")
+	}
+	return g
+}
+
+// 战略分析师外地人
+func (g *ground) Strategist0(actives ...int) *ground {
+	active := 2
+	if len(actives) != 0 {
+		active = actives[0]
+	}
+	switch active {
+	case 2:
+		g.Add(AMP(6))
+	case 3:
+		g.Add(AMP(10))
+	case 4:
+		g.Add(AMP(14))
+	case 5:
+		g.Add(AMP(18))
 	default:
 		panic("wrong origin num")
 	}

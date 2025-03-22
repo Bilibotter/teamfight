@@ -23,7 +23,7 @@ func (g *ground) Sorcerer() *ground {
 }
 
 func (g *ground) Fighter() *ground {
-	g.Sword().sterak().Titan().beaten(9)
+	g.Sword().Sterak().Titan().beaten(9)
 	return g
 }
 
@@ -195,7 +195,7 @@ func (g *ground) Justice() *ground {
 }
 
 // 血手
-func (g *ground) sterak() *ground {
+func (g *ground) Sterak() *ground {
 	g.ad += 15
 	p := attrPassive(TimeGoA, AD(35))
 	p.Left = 8
@@ -208,6 +208,15 @@ func (g *ground) Titan() *ground {
 	g.as += 10
 	p0 := stackPassive0(AttackA, 12, 1, AD(2), AP(2))
 	p1 := stackPassive0(TimeGoA, 13, 1, AD(2), AP(2))
+	g.addPassive(p0)
+	g.addPassive(p1)
+	return g
+}
+
+func (g *ground) Titan0() *ground {
+	g.as += 10
+	p0 := stackPassive0(AttackA, 20, 1, AD(2), AP(2))
+	p1 := stackPassive0(TimeGoA, 5, 1, AD(2), AP(2))
 	g.addPassive(p0)
 	g.addPassive(p1)
 	return g

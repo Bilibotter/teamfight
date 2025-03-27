@@ -75,7 +75,7 @@ func Test3Cost(t *testing.T) {
 
 	// 还减魔抗
 	elise3 := C.Mag(90, 0, 0.75).
-		Skill(55, 140*8).
+		Skill(55, 125*8).
 		Swing(9) // 11:04:80 11:05:70
 	elise3.Dynamo(4)
 	elise3.Jeweled().Breaker().Staff() // 破防可以换帽子
@@ -88,12 +88,11 @@ func Test3Cost(t *testing.T) {
 
 	// 标记会加伤害，后摇未知
 	yuumi3 := C.Mag(79, 0, 0.75).
-		Skill(30, (240+480)/2).
+		Skill(30, (240+125)*1.5).
 		Swing(6)
-	yuumi3.YuumiAmp(3)
+	yuumi3.YuumiAmp(4)
 	yuumi3.Strategist(5)              // 超载和战略分析差不多，但战略有前排
 	yuumi3.Blue().Jeweled().Breaker() // 破防 帽子 大天使都一样
-	yuumi3.End(16)
 	yuumi3.Fight("yuumi")
 
 	// 战士
@@ -103,13 +102,22 @@ func Test3Cost(t *testing.T) {
 	fiddkesticks2.Fight("Fiddkesticks[2]")
 
 	fiddkesticks3 := C.Mag(90, 0, 0.7).
-		Skill(50, 575*3).
+		Skill(45, 520*3).
+		Swing(30)
+	fiddkesticks3.BoomBots(4)
+	//fiddkesticks3.Techie(2)
+	fiddkesticks3.Beaten()
+	fiddkesticks3.Jeweled().Staff().Sword()
+	fiddkesticks3.Fight("Fiddkesticks[3]")
+
+	fiddkesticks3 = C.Mag(90, 0, 0.7).
+		Skill(45, 520*3).
 		Swing(30)
 	fiddkesticks3.BoomBots(2)
-	fiddkesticks3.Techie(2)
+	//fiddkesticks3.Techie(2)
 	fiddkesticks3.Beaten()
-	fiddkesticks3.Jeweled().Justice().Sword()
-	fiddkesticks3.Fight("Fiddkesticks[3]")
+	fiddkesticks3.Jeweled().Staff().Sword()
+	fiddkesticks3.Fight("Fiddkesticks[3]*")
 
 	//varus2 := C.Mag(53, 15, 0.7).
 	//	Skill(75, 300+150*3)
@@ -127,9 +135,11 @@ func Test3Cost(t *testing.T) {
 	//moderkaiser.Fight("Moderkaiser")
 
 	jarven4 := C.Phy(113, 30, 0.65).
-		Skill(90, 2*1.2*113)
+		Skill(90, 2*2*113)
 	jarven4.Slayer(4)
 	jarven4.GoldenOx(4)
+	jarven4.Sword().Titan().Sterak()
+	jarven4.Beaten()
 	jarven4.Fight("Jarven")
 	C.FormatResult()
 }

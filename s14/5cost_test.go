@@ -58,7 +58,7 @@ func Test5Cost(t *testing.T) {
 	renekton.Fight("Renekton")
 
 	viego := C.Mag(90, 20, 0.9).
-		Skill(80, 360+180*(5+3+3)/3).
+		Skill(80, 345+180*(5+3+3)/3).
 		Swing(25) // 01:31:70 01:34:20
 	viego.Beaten()
 	viego.Jeweled().Sword().Justice()

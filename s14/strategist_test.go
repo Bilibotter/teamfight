@@ -128,6 +128,23 @@ func TestStrategist(t *testing.T) {
 	samira.Shojin().Infinity().Shojin()
 	samira.End(17)
 	samira.Fight("Samira*+")
+
+	kobuko := C.Mag(30, 100, 0.8)
+	kobuko.Skill(220, 300+20*10*3, 20*15*3).
+		Swing(30) // 可能是5秒...
+	kobuko.Add(C.AE(135))
+	kobuko.KBK()
+	kobuko.Cyberboss(2)
+	kobuko.Jeweled().Justice().Sword() // 可能不需要吸血，最多两个大
+	kobuko.Beaten()
+	kobuko.Fight("Kobuko")
+
+	garen := C.Phy(120, 30, 0.85).
+		Skill(100, 6.5*120+2.6*120*2).Fury(2, C.TimeGoA).
+		Skill(50, 6.5*120+2.6*120*2).Fury(2, C.TimeGoA)
+	garen.Beaten()
+	garen.Sword().Sterak().Titan()
+	garen.Fight("Garen")
 	C.FormatResult()
 }
 

@@ -161,7 +161,7 @@ func (g *ground) GoldenOx(actives ...int) *ground {
 	if len(actives) != 0 {
 		active = actives[0]
 	}
-	gold := 60
+	gold := 32
 	switch active {
 	case 2:
 		g.Add(AMP(18 + gold*20/100))

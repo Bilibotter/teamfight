@@ -80,10 +80,11 @@ func Test2Cost(t *testing.T) {
 	//vayne2.Fight("Vayne[2]")
 
 	vayne3 := C.Phy(113, 0, 0.7).
-		Skill(60, (0.55*113*2+1.65*113)*1.8, 25*1.8).
-		Swing(12) //以2.5攻速射3次
-	vayne3.Guinsoo().Infinity().GiantSlayer()
-	vayne3.Slayer(6)
+		// (1*113+1.6*113+25)*2/3
+		Skill(50, 0).Fury(3, C.AttackA, C.AE(212), C.AS(1000))
+	vayne3.Guinsoo().Guinsoo().Infinity()
+	vayne3.Slayer(2)
+	vayne3.Animal(3)
 	vayne3.Fight("Vayne[3]")
 
 	// 有大头目，真伤算160%的魔法伤害
@@ -127,15 +128,12 @@ func Test2Cost(t *testing.T) {
 
 func TestSingle2Cost(t *testing.T) {
 	C.Level(3)
-	twisted3 := C.Mag(79, 10, 0.75).
-		Skill(70, 375+650*1.4).
-		Swing(10) // 可以改成8
-	twisted3.StackPassive(C.AttackA, C.AP(3))
-	twisted3.Syndicate(5)
-	twisted3.Rapidfire(2)
-	twisted3.Guinsoo().Jeweled().Breaker() // 破防可以换纳什或羊刀，都一样
-	twisted3.End(16)
-	twisted3.Fight("Twisted[Syn]")
+	vayne3 := C.Phy(113, 0, 0.7).
+		Skill(60, 0).Fury(3, C.AttackA, C.AE(223), C.AS(1000)).Swing(0)
+	vayne3.Guinsoo().Guinsoo().Infinity()
+	vayne3.Slayer(2)
+	vayne3.Animal(3)
+	vayne3.Fight("Vayne[3]")
 
 	C.FormatResult()
 }

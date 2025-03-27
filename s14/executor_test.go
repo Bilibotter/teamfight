@@ -48,5 +48,15 @@ func TestExecutor(t *testing.T) {
 	urgot.Executioner(4)
 	urgot.Fight("Urgot")
 
+	// 考虑加入逛街的影响
+	graves3 := C.Phy(124, 0, 0.6).
+		Skill(20, 0.45*131*5*2, 16*5).Swing(15)
+	graves3.Add(C.AtkAmp(75))
+	graves3.GoldenOx(2)
+	graves3.Divinicorps(3, C.CritRate(7), C.AD(9))
+	graves3.Executioner(5)
+	graves3.Silver().Titan().Sword()
+	graves3.Fight("Graves")
+
 	C.FormatResult()
 }
